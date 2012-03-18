@@ -1,5 +1,4 @@
-form(method="post")
-    input(type="text", name="title", placeholder="Title")
- 
-textarea(name="body", rows="20")
-input(type="submit", value="Publish")
+form#new(method="post")
+	input#title(type="text", name="title", placeholder="Title")
+	textarea(name="body", rows="20")
+	input#submit(type="submit", value="Publish")
