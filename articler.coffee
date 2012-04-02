@@ -1,5 +1,6 @@
 # Articler Class - Handles all article functions
 cradle = require 'cradle'
+moment = require 'moment'
  
 class Articler
     constructor: (host, port) ->
@@ -16,8 +17,17 @@ class Articler
             else
                 docs = []
                 res.forEach (row) ->
-                    docs.push row
+                	row.created_at = moment(row.created_at).fromNow()
+                	docs.push row
                 callback null, docs
+    
+    findById: (id, callback) ->
+        @db.get id, (err,res) ->
+            if (err)
+                callback err
+            else 
+                res.created_at = moment(res.created_at).fromNow()
+                callback null, res
  
     save: (articles, callback) ->
         @db.save articles, (err, res) ->

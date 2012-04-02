@@ -2,10 +2,18 @@
 html(lang="en")
     head
         title= title
-        link(rel= 'stylesheet', href= '/style.css')
+        link(rel= 'stylesheet', href= '/css/style.css')
     body
         header
             a(href='/')
                 h1= 'CouchPress'
         section.content
             != body
+        footer
+            | &copy; 2012 Alexander Yuen.
+            p
+                | Many thanks to 
+                a(href="http://www.nodester.com") Nodester
+                |  and 
+                a(href="http://www.iriscouch.com") Iris Couch
+                |  for providing free hosting. Couchpress is licensed under the MIT License.
