@@ -1,18 +1,37 @@
 # Requires and Variables
 exp = require 'express'
 app = exp.createServer()
+pass = require 'passport'
+Local = require('passport-local').Strategy
+config = require('./config').config
 
-# Articler Class - Remember to Change to Iris Couch
-Articler = require('./articler').Articler
-article = new Articler 'http://couchpress.iriscouch.com', 80
- 
+# Controllers
+posts = require('./controllers/posts').posts
+users = require('./controllers/users').users
+
+pass.serializeUser (user, done) ->
+	done null, user._id
+	
+pass.deserializeUser (id, done) ->
+	users.findId id, (err, docs) ->
+		done err, docs
+		
+pass.use 'local', new Local (username, password, done) ->
+	process.nextTick () ->
+		users.find username, password, done
+
 # App Configuration
 app.configure () ->
     app.set 'view engine', 'jade'
     app.set 'views', __dirname + '/views'
     app.use exp.static __dirname + '/public'
+    app.use exp.cookieParser()
     app.use exp.bodyParser()
     app.use exp.methodOverride()
+    app.use exp.session {secret: config.site.secret}
+    app.use pass.initialize()
+    app.use pass.session()
+    app.use app.router
  
 # Run App
 app.listen 16488
@@ -20,42 +39,78 @@ console.log 'Server running at port 16488'
 
 # Routing
 app.get '/', (req, res) ->
-	article.findAll (err, docs) ->
+	posts.findAll (err, docs) ->
         res.render 'index',
             locals:
-                title: 'CouchPress'
+                title: config.site.title
                 articles: docs
 
 app.get '/view/:id', (req, res) ->
-	article.findById req.params.id, (err, docs) ->
+	posts.findById req.params.id, (err, docs) ->
 		res.render 'view',
 			locals:
-				title: 'Couchpress /' + docs.title
+				title: config.site.title + ' / ' + docs.title
 				article: docs
 
-app.get '/admin', (req, res) ->
-	article.findAll (err, docs) ->
+app.get '/login', (req, res) ->
+	res.render 'login',
+		locals:
+			title: config.site.title + ' / Login'
+			message: req.flash('error')
+				
+app.post '/login', pass.authenticate 'local',
+	successRedirect: '/admin'
+	failureRedirect: '/login'
+	failureFlash: true
+	
+app.get '/register', (req, res) ->
+	res.render 'register',
+		title: config.site.title
+			
+app.post '/register', (req, res) ->
+	data =
+		_id: 'org.couchdb.user:'+ req.param 'username'
+		name: req.param 'username'
+		password: req.param 'password'
+		email: req.param 'email'
+		roles: []
+		type: 'user'
+	users.register data, (err,docs) ->
+		if err
+			res.render 'register',
+				locals:
+					title: config.site.title
+					message: JSON.stringify err
+		else
+			res.redirect '/admin'
+
+app.get '/logout', (req, res) ->
+	req.logOut()
+	res.redirect '/'
+	
+app.get '/admin', users.check, (req, res) ->
+	posts.findAll (err, docs) ->
 		res.render 'admin/posts',
 			layout: 'admin/layout'
 			locals:
 				title: 'Posts'
 				articles: docs
 
-app.get '/admin/new', (req, res) ->
-    res.render 'admin/new',
-    	layout: 'admin/layout',
-    	locals:
-    		title: 'New'
+app.get '/admin/new', users.check, (req, res) ->
+	res.render 'admin/new',
+		layout: 'admin/layout',
+		locals:
+			title: 'New'
 
-app.get '/admin/edit/:id', (req, res) ->
-	article.findById req.params.id, (err, docs) ->
+app.get '/admin/edit/:id', users.check, (req, res) ->
+	posts.findById req.params.id, (err, docs) ->
 		res.render 'admin/new'
 			layout: 'admin/layout'
 			locals:
 				title: 'Edit'
 				article: docs
 
-app.post '/admin/new', (req, res) ->
+app.post '/admin/new', users.check, (req, res) ->
 	docs = 
 		title: req.param 'title'
 		body: ''
@@ -65,26 +120,26 @@ app.post '/admin/new', (req, res) ->
 			title: 'New'
 			article: docs
 
-app.post '/admin/edit', (req, res) ->
-    if (req.param 'slug')
-        slug = req.param 'slug'
-    else
-        slug = sluggify req.param 'title'
-    article.save {
-        _id: slug
-        title: req.param 'title'
-        body: req.param 'body'
-        _rev: req.param 'rev'
-        created_at: new Date()
-    }, (err, docs) ->
-    	if (err)
-    		res.render 'admin/error'
-    			layout: 'admin/layout'
-    			locals:
-    				title: 'Error'
-    				error: JSON.stringify(err)
-    	else
-        	res.redirect('/')
+app.post '/admin/edit', users.check, (req, res) ->
+	if (req.param 'slug')
+		slug = req.param 'slug'
+	else
+		slug = sluggify req.param 'title'
+	posts.save {
+		_id: slug
+		title: req.param 'title'
+		body: req.param 'body'
+		_rev: req.param 'rev'
+		created_at: new Date()
+	}, (err, docs) ->
+		if (err)
+			res.render 'admin/error'
+				layout: 'admin/layout'
+				locals:
+					title: 'Error'
+					error: JSON.stringify(err)
+		else
+			res.redirect('/')
         	
 # Other Functions
 sluggify = (title) ->

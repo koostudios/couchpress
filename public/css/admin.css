@@ -56,6 +56,12 @@ nav {
 		text-shadow: 0 1px 1px #CCC;
 	}
 
+nav.right {
+	position: absolute;
+	top: 0;
+	right:0;	
+}
+
 .title {
 	background: #DDD;
 	margin-top: 46px;
@@ -74,13 +80,15 @@ nav {
 	max-width: 800px;	
 }
 	.article {
+		padding: 15px 20px;
 		border-bottom: 1px solid #DDD;	
 	}
 	
 	.article a {text-decoration: none;}
 	
 	.article h1 {
-		margin: 15px 20px;
+		margin: 0;
+		margin-right: 20px;
 		display: inline-block;
 		color: #555;
 	}

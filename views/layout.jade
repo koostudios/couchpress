@@ -6,14 +6,19 @@ html(lang="en")
     body
         header
             a(href='/')
+                img(src= '/img/logo-blog.png')
                 h1= 'CouchPress'
         section.content
             != body
         footer
-            | &copy; 2012 Alexander Yuen.
+            | &copy; 2012 Alexander Yuen. 
+            p
+                a.nav(href= 'http://twitter.com/koostudios') @koostudios
+                a.nav(href= '/admin') Admin Area
+                a.nav(href= '/') Home
             p
                 | Many thanks to 
                 a(href="http://www.nodester.com") Nodester
                 |  and 
                 a(href="http://www.iriscouch.com") Iris Couch
-                |  for providing free hosting. Couchpress is licensed under the MIT License.
+                |  for providing free hosting. Couchpress is released under the MIT License.

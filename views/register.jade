@@ -1,0 +1,10 @@
+- if (typeof message != 'undefined')
+	div.error= message
+form(method= 'post')
+	label= 'Email'
+	input(type= 'text', name= 'email')
+	label= 'Username'
+	input(type= 'text', name= 'username')
+	label= 'Password'
+	input(type= 'password', name= 'password')
+	input(type= 'submit', value= 'Register')
