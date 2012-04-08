@@ -1,24 +1,31 @@
 !!! 5
 html(lang="en")
     head
-        title= title
+        title= config.site.title
+        meta(name= 'description', content= config.site.description)
         link(rel= 'stylesheet', href= '/css/style.css')
     body
         header
             a(href='/')
                 img(src= '/img/logo-blog.png')
                 h1= 'CouchPress'
+        a(href= 'http://github.com/koostudios/couchpress')
+            img(style= 'position: fixed; top: 0; right: 0; border: 0;',m src= 'https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67', alt= 'Fork me on GitHub')
         section.content
             != body
         footer
-            | &copy; 2012 Alexander Yuen. 
+            | &copy; 2012 #{config.site.copyright}. 
             p
-                a.nav(href= 'http://twitter.com/koostudios') @koostudios
+                -if(config.site.twitter)
+                    a.nav(href= 'http://twitter.com/#{config.site.twitter}') @#{config.site.twitter}
                 a.nav(href= '/admin') Admin Area
                 a.nav(href= '/') Home
             p
+                |Proudly powered by 
+                a(href= 'http://couchpress.nodester.com') CouchPress
+                |  v#{config.site.version}.
                 | Many thanks to 
                 a(href="http://www.nodester.com") Nodester
                 |  and 
                 a(href="http://www.iriscouch.com") Iris Couch
-                |  for providing free hosting. Couchpress is released under the MIT License.
+                |  for providing free hosting. 

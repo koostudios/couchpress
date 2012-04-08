@@ -34,29 +34,32 @@ app.configure () ->
     app.use app.router
  
 # Run App
-app.listen 16488
-console.log 'Server running at port 16488'
+app.listen config.site.port
+console.log 'Server running at port ' + app.address().port
 
 # Routing
 app.get '/', (req, res) ->
 	posts.findAll (err, docs) ->
         res.render 'index',
             locals:
-                title: config.site.title
-                articles: docs
+            	title: config.site.title + ' / Home'
+            	articles: docs
+            	config: config
 
 app.get '/view/:id', (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
 		res.render 'view',
 			locals:
-				title: config.site.title + ' / ' + docs.title
+				title: config.site.title+' / '+docs.title
 				article: docs
+				config: config
 
 app.get '/login', (req, res) ->
 	res.render 'login',
 		locals:
-			title: config.site.title + ' / Login'
+			title: config.site.title+' / Login'
 			message: req.flash('error')
+			config: config
 				
 app.post '/login', pass.authenticate 'local',
 	successRedirect: '/admin'
@@ -66,6 +69,7 @@ app.post '/login', pass.authenticate 'local',
 app.get '/register', (req, res) ->
 	res.render 'register',
 		title: config.site.title
+		config: config
 			
 app.post '/register', (req, res) ->
 	data =
@@ -81,6 +85,7 @@ app.post '/register', (req, res) ->
 				locals:
 					title: config.site.title
 					message: JSON.stringify err
+					config: config
 		else
 			res.redirect '/admin'
 
@@ -101,14 +106,16 @@ app.get '/admin/new', users.check, (req, res) ->
 		layout: 'admin/layout',
 		locals:
 			title: 'New'
+			config: config
 
-app.get '/admin/edit/:id', users.check, (req, res) ->
+app.get '/admin/edit/:id?', users.check, (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
-		res.render 'admin/new'
+		res.render 'admin/editor',
 			layout: 'admin/layout'
 			locals:
 				title: 'Edit'
 				article: docs
+				config: config
 
 app.post '/admin/new', users.check, (req, res) ->
 	docs = 
