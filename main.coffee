@@ -50,14 +50,14 @@ app.get '/view/:id', (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
 		res.render 'view',
 			locals:
-				title: config.site.title+' / '+docs.title
+				title: config.site.title + ' / ' + docs.title
 				article: docs
 				config: config
 
 app.get '/login', (req, res) ->
 	res.render 'login',
 		locals:
-			title: config.site.title+' / Login'
+			title: config.site.title + å' / Login'
 			message: req.flash('error')
 			config: config
 				
