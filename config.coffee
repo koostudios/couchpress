@@ -13,9 +13,16 @@ exports.config =
 		# Site port  - get this from your NodeJS host
 		port: ''
 		# Session Secret - a random string used to compute the session hash
-		secret: ''
+		secret: 'somestringhere'
 		# CouchPress Version
 		version: '0.1.2'
+	
+	# Theme Information
+	theme:
+		# Folder Name of Admin Theme
+		admin: 'admin'
+		# Folder Name of Frontend Theme
+		front: 'soothe'
 		
 	# Database Settings - get this info from your CouchDB host
 	db:

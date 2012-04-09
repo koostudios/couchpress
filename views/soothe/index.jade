@@ -1,7 +1,7 @@
 - if(typeof(articles) != 'undefined')
 	- each article in articles
 		.article
-			- var link = 'view/' + article._id
+			- var link = '/view/' + article._id
 			a(href= link, class= 'title')
 				h1= article.title
 			span.created= article.created_at

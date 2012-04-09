@@ -19,12 +19,17 @@ pass.deserializeUser (id, done) ->
 pass.use 'local', new Local (username, password, done) ->
 	process.nextTick () ->
 		users.find username, password, done
+		
+# Theme Paths
+admin = __dirname + '/views/' + config.theme.admin + '/'
+front = __dirname + '/views/' + config.theme.front + '/'
 
 # App Configuration
 app.configure () ->
     app.set 'view engine', 'jade'
     app.set 'views', __dirname + '/views'
-    app.use exp.static __dirname + '/public'
+    app.use '/admin', exp.static admin + '/public'
+    app.use exp.static front + '/public'
     app.use exp.cookieParser()
     app.use exp.bodyParser()
     app.use exp.methodOverride()
@@ -40,24 +45,24 @@ console.log 'Server running at port ' + app.address().port
 # Routing
 app.get '/', (req, res) ->
 	posts.findAll (err, docs) ->
-        res.render 'index',
+        res.render front + 'index',
             locals:
             	title: config.site.title + ' / Home'
             	articles: docs
             	config: config
 
-app.get '/view/:id', (req, res) ->
+app.get '/view/:id?', (req, res, next) ->
 	posts.findById req.params.id, (err, docs) ->
-		res.render 'view',
+		res.render front + 'view',
 			locals:
 				title: config.site.title + ' / ' + docs.title
 				article: docs
 				config: config
 
 app.get '/login', (req, res) ->
-	res.render 'login',
+	res.render front + 'login',
 		locals:
-			title: config.site.title + å' / Login'
+			title: config.site.title + ' / Login'
 			message: req.flash('error')
 			config: config
 				
@@ -67,8 +72,8 @@ app.post '/login', pass.authenticate 'local',
 	failureFlash: true
 	
 app.get '/register', (req, res) ->
-	res.render 'register',
-		title: config.site.title
+	res.render front + 'register',
+		title: config.site.title + ' / Register'
 		config: config
 			
 app.post '/register', (req, res) ->
@@ -95,23 +100,23 @@ app.get '/logout', (req, res) ->
 	
 app.get '/admin', users.check, (req, res) ->
 	posts.findAll (err, docs) ->
-		res.render 'admin/posts',
-			layout: 'admin/layout'
+		res.render admin + 'posts',
+			layout: admin + 'layout'
 			locals:
 				title: 'Posts'
 				articles: docs
 
 app.get '/admin/new', users.check, (req, res) ->
-	res.render 'admin/new',
-		layout: 'admin/layout',
+	res.render admin + 'new',
+		layout: admin + 'layout',
 		locals:
 			title: 'New'
 			config: config
 
 app.get '/admin/edit/:id?', users.check, (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
-		res.render 'admin/editor',
-			layout: 'admin/layout'
+		res.render admin + 'editor',
+			layout: admin + 'layout'
 			locals:
 				title: 'Edit'
 				article: docs
@@ -121,8 +126,8 @@ app.post '/admin/new', users.check, (req, res) ->
 	docs = 
 		title: req.param 'title'
 		body: ''
-	res.render 'admin/new'
-		layout: 'admin/layout',
+	res.render admin + 'new'
+		layout: admin + 'layout',
 		locals:
 			title: 'New'
 			article: docs
@@ -140,8 +145,8 @@ app.post '/admin/edit', users.check, (req, res) ->
 		created_at: new Date()
 	}, (err, docs) ->
 		if (err)
-			res.render 'admin/error'
-				layout: 'admin/layout'
+			res.render admin + 'error'
+				layout: admin + 'layout'
 				locals:
 					title: 'Error'
 					error: JSON.stringify(err)

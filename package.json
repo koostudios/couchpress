@@ -3,7 +3,7 @@
   "description": "A super lightweight and modular CMS built on NodeJS, Express and CouchDB.",
   "tags": ["cms", "content management", "blog", "blogging", "node","couchdb"],
   "version": "0.1.2",
-  "homepage": "http://couchpress.nodester.com",
+  "homepage": "https://github.com/koostudios/Couchpress",
   "author": "Alexander Yuen <koo.studios@gmail.com> (http://www.koostudios.com/)",
   "repository": {
     "type": "git",
