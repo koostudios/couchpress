@@ -13,13 +13,13 @@
   "engines": {"node": ">=0.6.12"},
   "main": "server.js",
   "dependencies": {
-  	"coffee-script"	: "1.2.x",
-	"express"		: "0.5.x",
+  	"coffee-script"		: "1.2.x",
+	"express"		: "2.5.x",
 	"jade"			: "0.20.x",
 	"cradle"		: "0.5.x",
 	"moment"		: "1.5.x",
 	"passport"		: "0.1.x",
-	"passport-local": "0.1.x"
+	"passport-local"	: "0.1.x"
   },
   "license": "MIT"
 }
