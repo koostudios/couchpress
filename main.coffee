@@ -86,9 +86,9 @@ app.post '/register', (req, res) ->
 		type: 'user'
 	users.register data, (err,docs) ->
 		if err
-			res.render 'register',
+			res.render front + 'register',
 				locals:
-					title: config.site.title
+					title: config.site.title + ' / Register'
 					message: JSON.stringify err
 					config: config
 		else

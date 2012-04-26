@@ -1,13 +1,14 @@
 cradle = require 'cradle'
 crypto = require 'crypto'
 config = require('../config').config
+admin = require('../config').admin
 
 class User
 	constructor: () ->
 		@connect = new cradle.Connection config.db.host, config.db.port, {
 			cache: true
 			raw: false
-			auth: {username: config.db.user, password: config.db.pass}
+			auth: {username: admin.user, password: admin.pass}
 		}
 		@db = @connect.database '_users'
 		
