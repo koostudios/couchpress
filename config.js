@@ -1,0 +1,1 @@
+exports.config = {"site":{"title":"CouchPress Site","description":"Just another CouchPress Site","copyright":"Joe Bloggs","twitter":"joebloggs","port":"3000","secret":"somethingsecret"},"theme":{"admin":"admin","front":"soothe"},"db":{"host":"http://localhost","port":"5984","user":"admin","pass":"admin"}}
