@@ -1,5 +1,8 @@
 
+previous:
+	@npm install
+	
 install:
 	@node setup/install
 	 
-PHONY: install
+PHONY: previous install

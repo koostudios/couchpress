@@ -14,8 +14,8 @@ A super lightweight and modular blogging engine or content management system bui
 In order to install CouchPress you only need to do:
 
     > cd path/to/couchpress;
-    > npm install
     > make
+    > make install
 
 This command is going to help you to configure your local CouchPress installation trough a few questions, also
 is going to setup the database and the views.
