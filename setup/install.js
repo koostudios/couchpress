@@ -21,10 +21,12 @@ var data = {
   },
   db:{
     host:"http://localhost",
-    port:"5984",
-    user:"admin",
-    pass:"admin"
+    port:"5984"
   }
+}
+var admin = {
+  user :"admin",
+  pass :"admin"
 }
 var site = data.site
   , theme = data.theme
@@ -95,11 +97,11 @@ function init (cb){
     , function (n) {db.port = n}
   )
   (read
-    , [{prompt:"Database username: ",default: db.user}]
+    , [{prompt:"Database username: ",default: admin.user}]
     , function (n) {db.user = n}
   )
   (read
-    , [{prompt:"Username pass: ",default: db.pass}]
+    , [{prompt:"Username pass: ",default: admin.pass}]
     , function (n) {db.pass = n}
   )
   (function(cb){
@@ -114,7 +116,8 @@ function init (cb){
     })
   })
   (function(cb){
-    var template = 'exports.config = '+ JSON.stringify(data);
+    var template = 'exports.config = '+ JSON.stringify(data) +
+                  ';exports.admin = '+ JSON.stringify(admin);
     fs.writeFile('./config.js',template,'utf8', function(err,resp){
       if (err) return cb(err)
       console.log('config.json wrote sucessfully')
