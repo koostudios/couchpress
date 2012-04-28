@@ -30,6 +30,8 @@ exports.config =
 		host: 'http://www.example.com'
 		# CouchDB Host Port
 		port: 80
+		
+exports.admin =
 		# CouchDB Admin - create an admin with a password to secure your site
 		user: 'admin'
 		# CouchDB Admin Password
