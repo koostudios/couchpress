@@ -1,1 +1,0 @@
-exports.config = {"site":{"title":"Simple test","description":"This is a simple test","copyright":"Alejandro Morales","twitter":"_alejandromg","port":"3000","secret":"reallysecret"},"theme":{"admin":"admin","front":"soothe"},"db":{"host":"http://localhost","port":"5984","user":"admin","pass":"admin"}}

@@ -98,15 +98,15 @@ function init (cb){
   )
   (read
     , [{prompt:"Database username: ",default: admin.user}]
-    , function (n) {db.user = n}
+    , function (n) {admin.user = n}
   )
   (read
     , [{prompt:"Username pass: ",default: admin.pass}]
-    , function (n) {db.pass = n}
+    , function (n) {admin.pass = n}
   )
   (function(cb){
     console.log('\n\t:: About to write ::\n');
-    console.log(data)
+    console.log('config = ', data ,'\nadmin = ', admin);
     read({ prompt: "\nIs this ok? ", default: "yes" }, function (er, ok) {
       if (er) return cb(er)
       if (ok.toLowerCase().charAt(0) !== "y") {
@@ -156,7 +156,7 @@ function init (cb){
            var url =  data.db.host;
           if (!~url.indexOf('://')) url = 'http://' + url;
           var c = new(cradle.Connection)(url,data.db.host,{
-             auth: { username: data.db.user, password: data.db.pass }
+             auth: { username: admin.user, password: admin.pass }
           });
           var salt = crypto.createHash('md5').update(new Date().toString()).update(Math.random().toString()).digest('hex');
           var toSave = {
@@ -192,7 +192,7 @@ function installViews(data,cb){
   var url =  data.db.host
   if (!~url.indexOf('://')) url = 'http://' + url;
   var c = new(cradle.Connection)(url,data.db.host,{
-     auth: { username: data.db.user, password: data.db.pass }
+     auth: { username: admin.user, password: admin.pass }
   });
   var db = c.database('couchpress');
   function seed(){
