@@ -171,7 +171,7 @@ function init (cb){
           var db = c.database('_users');
           db.save(toSave, function(err,resp){
             if (err && err.error !== 'conflict') return cb(err);
-            else console.log('\nI can\'t update your username already exists'); return cb();
+            else if (err) console.log('\nI can\'t update your username already exists'); return cb();
             console.log('User saved...');
             return cb();
           });
@@ -209,7 +209,6 @@ function installViews(data,cb){
     });
   }
   db.exists(function (err, exists) {
-    console.log(err);
     if (err) {
       return cb(new Error(err));
     } else if (exists) {
