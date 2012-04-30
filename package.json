@@ -20,6 +20,7 @@
     "moment"         : "1.5.x",
     "passport"       : "0.1.x",
     "passport-local" : "0.1.x",
+    "node-markdown"  : "0.1.x",
     "read"           : "0.0.2"
   },
   "license": "MIT"

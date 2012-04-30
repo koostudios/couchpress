@@ -1,0 +1,35 @@
+.message
+form.settings(method= 'post', action= '/admin/settings')
+	- if(typeof config != 'undefined' && typeof admin != 'undefined')
+		each fields, area in config
+			h1= area
+			table(id= area)
+				each field, name in fields
+					tr
+						td
+							label= name
+						td
+							- if(name == 'version')
+								input(type= 'text', name= name, value= field, disabled= 'true')
+							- else
+								input(type= 'text', name= name, value= field)
+		h1= 'Administrator'
+		table#admin
+			each field, name in admin
+				tr
+					td
+						label= name
+					td
+						- if(name != 'pass')
+							input(type= 'text', name= name, value= field)
+						- else
+							input(type= 'password', name= name, value= field)
+		.buttons
+			input#submit(type= 'submit', value= 'Save')
+			a(href= '/admin')
+				input#cancel(type= 'button', value= 'Cancel')
+	- else
+		p= "Sorry, a configuration file was not found."
+
+script(type= 'text/javascript', src= 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+script(type= 'text/javascript', src= '/admin/js/settings.js')

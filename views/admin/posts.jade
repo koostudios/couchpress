@@ -5,8 +5,13 @@
 	- each article in articles
 		.article
 			- var link = 'admin/edit/' + article._id
+			
 			a(href= link)
 				h1= article.title
-			span.created= article.created_at
+				span.status(class= article.status)= article.status
+			.right
+				a.edit(href= link)= 'Edit'
+				a.delete(href= 'admin/delete/' + article._id)= 'Delete'
+			span.created= article.created_at + ' by ' + article.user
 - else
 	.article= "Sorry, no posts found."

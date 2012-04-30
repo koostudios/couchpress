@@ -1,5 +1,6 @@
 cradle = require 'cradle'
 moment = require 'moment'
+md = require('node-markdown').Markdown
 config = require('../config').config
  
 class Post
@@ -29,11 +30,13 @@ class Post
                 res.created_at = moment(res.created_at).fromNow()
                 callback null, res
  	
- 	save: (articles, callback) ->
-        @db.save articles, (err, res) ->
+ 	save: (article, callback) ->
+        article.body = md(article.markdown)
+        article.created_at = new Date()
+        @db.save article, (err, res) ->
             if (err)
                 callback err
             else
-                callback null, articles
+                callback null, article
  
 exports.posts = new Post()

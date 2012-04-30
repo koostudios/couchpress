@@ -1,5 +1,5 @@
 ::selection {
-	background: #FFC;
+	background: #FFA;
 }
 
 * {
@@ -18,7 +18,7 @@ header {
 	height: 46px; width: 100%;
 	margin: 0; padding: 0;
 	font-size: 1em;
-	z-index: 1000;
+	z-index: 100;
 }
 
 	header img {
@@ -80,6 +80,7 @@ nav.right {
 	max-width: 800px;	
 }
 	.article {
+		position: relative;
 		padding: 15px 20px;
 		border-bottom: 1px solid #DDD;	
 	}
@@ -88,18 +89,130 @@ nav.right {
 	
 	.article h1 {
 		margin: 0;
-		margin-right: 20px;
+		margin-right: 10px;
 		display: inline-block;
 		color: #555;
 	}
 	
-	.article:hover > a h1 {color: #000;}
+	.article span.status.published {color: #080;}
+	.article span.status.draft {color: #800;}
 	
 	.article span.created {
+		display: block;
+		margin-top: 3px;
 		font-size: 0.9em;
 		color: #AAA;	
 	}
+	
+	
+	.article .right {
+		display: inline;
+		opacity: 0;
+		position: absolute;
+		top: 31px;
+		right: 20px;
+	}
+	
+		.article .right a {
+			text-transform: uppercase;
+			font-weight: bold;
+			color: #AAA;
+			margin-left: 10px;
+		}
+		
+		.article .right a:hover {
+			color: #555;
+		}
 
+.article:hover > a h1,
+.article:hover > .right {
+	color: #000;
+	opacity: 1;
+}
+
+.message {
+	display: none;
+	width: 790px;
+	background: #FFC;
+	border: 1px solid #EEB;
+	padding: 10px 20px;
+	margin-top: 20px;
+}
+
+.settings {
+	padding-top: 20px;
+}
+
+	.settings h1,
+	.settings label {
+		text-transform: capitalize;
+		color: #555;
+	}
+	
+	.settings label:after {
+		content: ':';
+	}
+
+	.settings table td:first-child {
+		width: 300px;
+	}
+	
+	.settings input {
+		display: inline-block;
+		width: 500px;
+		font-size: 1em;
+		border: 1px solid #CCC;
+		padding: 8px;
+		outline: none;
+		font-weight: normal;
+	}
+	
+	.settings input:disabled {
+		color: #888;
+		background: #EEE;
+	}
+	
+	.settings input:focus {
+		border: 1px solid #888;
+	}
+	
+	.buttons {
+		height: 40px;
+		padding: 10px 0;
+		margin-top: 20px;
+	}
+	
+	.settings a {
+		text-decoration: none;
+	}
+	
+	.settings #submit,
+	.settings #cancel {
+		display: inline;
+		padding: 10px 15px;
+		margin-right: 10px;
+		width: 100px;
+		font-size: 0.8em;
+		font-weight: bold;
+		color: #555;
+		background: #DDD;
+		border: 1px solid #AAA;
+		cursor: pointer;
+		box-shadow: inset 0 1px 1px #FFF;
+	}
+		
+	.settings #submit:hover,
+	.settings #cancel:hover {
+		background: #EEE;
+	}
+		
+	.settings #submit:active, 
+	.settings #cancel:active {
+		background: #555;
+		color: #FFF;
+		box-shadow: inset 0 1px 1px #222;
+	}
+	
 form input {
 	display: block;	
 	padding: 15px 20px;
@@ -147,13 +260,24 @@ form input {
 		cursor: pointer;
 	}
 	
+	#fullscreen-area:-webkit-full-screen  {
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	
 	.tray {
 		background: #DDD;
-		width: 810px;
+		min-width: 810px;
 		padding: 10px;
 		border: 1px solid #CCC;
 		border-bottom: 0;
 		position: relative;
+	}
+	
+	:-webkit-full-screen .tray,
+	:-moz-full-screen .tray {
+		width: 100% !important;	
 	}
 	
 	.tray div {
@@ -177,7 +301,8 @@ form input {
 			background: #FFF;	
 		}
 		
-		.tray button.edit {
+		.tray button.edit,
+		.tray button.other {
 			width: 32px;	
 		}
 		
@@ -199,8 +324,15 @@ form input {
 			top: 10px;
 			right: 0;	
 		}
+		
+		#fullscreen img {
+			top: 1px;
+			position: relative;
+			
+		}
 	
-	.editor-visual {
+	.preview {
+		display: none;
 		color: #555;
 		width: 790px;
 		min-height: 300px;
@@ -208,21 +340,72 @@ form input {
 		border: 1px solid #DDD;
 		outline: none;
 		margin-bottom: 10px;
+		line-height: 1.4em;
 	}
+	
+	.preview p:first-child {
+		margin-top: 0;
+	}
+	
+	.preview pre {
+		display: block;	
+	}
+	
+	.preview code {
+		display: inline-block;	
+	}
+	
+	.preview pre, 
+	.preview code {
+		background: #EEE;
+		border: 1px solid #CCC;
+		font-family: 'Courier';
+		padding: 0 3px;
+		font-size: 0.9em;
+		line-height: 1.1em;
+	}
+	
+	.preview pre > code {
+		background: transparent;
+		border: 0;
+		padding: 5px;
+		font-size: 1em;
+		line-height: 1.4em;
+	}
+	
+	.preview blockquote {
+		border-left: 5px solid #EEE;
+		padding-left: 10px;	
+	}
+	
+	.preview img {
+		max-width: 790px;
+	}
+	
 		
 		form#editor textarea {
-			display: none;
-			width: 790px;
+			min-width: 790px;
+			min-height:400px;
 			padding: 20px;
 			border: 1px solid #DDD;
 			outline: none;
 			font-size: 1em;
-			max-width: 100%;
 			color: #555;
-			margin-top: 0;
+			margin: 0;
+		}
+		
+		#fullscreen-area:-webkit-full-screen textarea,
+		#fullscreen-area:-webkit-full-screen .preview {
+			width: 100% !important;
+			height: 100% !important;	
+		}
+		
+		.editor-markdown {
+			font-family: 'Consolas';	
 		}
 		
 		form#editor #submit {
+			display: inline;
 			padding: 10px 15px;
 			width: 100px;
 			font-size: 0.8em;
@@ -241,4 +424,119 @@ form input {
 			color: #FFF;
 			box-shadow: inset 0 1px 1px #222;
 		}
+		
+		form#editor input[type=checkbox] {
+			display: inline;
+			width: 14px;
+			margin-left: 10px;
+		}
+		
+		form#editor span {
+			font-size: 14px;
+		}
 
+#dialog {
+	display: none;
+	opacity: 0;
+	position: fixed;
+	box-shadow: 0 0 18px rgba(0,0,0,0.4);
+	width: 400px;
+	background-color: #FFF;
+	z-index: 2000;
+	margin: 0 auto;
+}
+	#dialog-title {
+		padding: 10px;
+		font-size: 1.2em;
+		border: 1px solid #CCC;
+		background-color: #DDD;
+	}
+	
+	#dialog-content {
+		padding: 10px;	
+	}
+	
+	#dialog-body {
+		font-size: 0.9em;
+	}
+	
+		#dialog-body label {
+			display: block;
+			font-weight: bold;
+			margin-top: 5px;
+		}
+
+		#dialog-body input[type=text] {
+			display: block;
+			width: 368px;
+			margin: 5px auto;
+			padding: 5px;
+			border: 1px solid #CCC;
+			font-size: 1em;
+			outline:none;
+		}
+		
+		#dialog-body input[type=text]:focus {
+			border: 1px solid #888;
+		}
+		
+		#dialog-body input[type=file] {
+			width: 380px;
+			padding: 8px 0;
+		}
+
+	#dialog-buttons {
+		backgound-color: #EEE;
+		padding-top: 10px;
+		height: 35px;
+	}
+	
+		.dialog-button {
+			min-width: 80px;
+			float: right;
+			background-color: #DDD;
+			border: 1px solid #AAA;
+			box-shadow: inset 0 1px 1px #FFF;
+			font-size: 0.8em;
+			font-weight: bold;
+			color: #555;
+			padding: 8px;
+			margin-left: 5px;
+		}
+		
+		.dialog-button:hover {
+			background-color: #EEE;
+		}
+		
+		.dialog-button:active {
+			background: #555;
+			color: #FFF;
+			box-shadow: inset 0 1px 1px #222;	
+		}
+
+#overlay {
+	display: none;
+	opacity: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	z-index: 1000;
+}
+
+footer {
+	max-width: 790px;
+	margin: 20px auto;
+	color: #888;
+	font-size: 0.8em;
+}
+
+footer a {
+	color: #555;
+}
+
+footer a:hover {
+	text-decoration: none;
+}

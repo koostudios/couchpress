@@ -3,6 +3,7 @@ exp = require 'express'
 app = exp.createServer()
 pass = require 'passport'
 Local = require('passport-local').Strategy
+fs = require 'fs'
 config = require('./config').config
 
 # Controllers
@@ -51,13 +52,18 @@ app.get '/', (req, res) ->
             	articles: docs
             	config: config
 
-app.get '/view/:id?', (req, res, next) ->
+app.get '/:id?', (req, res, next) ->
 	posts.findById req.params.id, (err, docs) ->
-		res.render front + 'view',
-			locals:
-				title: config.site.title + ' / ' + docs.title
-				article: docs
-				config: config
+		if err
+			next()
+		else if docs.status != 'draft'
+			res.render front + 'view',
+				locals:
+					title: config.site.title + ' / ' + docs.title
+					article: docs
+					config: config
+		else
+			next()
 
 app.get '/login', (req, res) ->
 	res.render front + 'login',
@@ -88,7 +94,7 @@ app.post '/register', (req, res) ->
 		if err
 			res.render front + 'register',
 				locals:
-					title: config.site.title + ' / Register'
+					title: config.site.title
 					message: JSON.stringify err
 					config: config
 		else
@@ -106,31 +112,51 @@ app.get '/admin', users.check, (req, res) ->
 				title: 'Posts'
 				articles: docs
 
-app.get '/admin/new', users.check, (req, res) ->
-	res.render admin + 'new',
-		layout: admin + 'layout',
+app.get '/admin/settings', users.check, (req, res) ->
+	adminConfig = require('./config').admin
+	res.render admin + 'settings',
+		layout: admin + 'layout'
 		locals:
-			title: 'New'
+			title: 'Settings'
 			config: config
+			admin: adminConfig
+
+app.post '/admin/settings', users.check, (req, res) ->
+	template = 'exports.config = ' + req.param('data') + '; exports.admin = ' + req.param('admin')
+	fs.writeFile './config.js', template, 'utf8', (err) ->
+		if err
+			res.send '<b>Error:</b>' + err
+		else
+			res.send '<b>Success!</b> Settings Saved.'
+			delete require.cache[require.resolve('./config')]
+			config = require('./config').config
 
 app.get '/admin/edit/:id?', users.check, (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
-		res.render admin + 'editor',
-			layout: admin + 'layout'
-			locals:
-				title: 'Edit'
-				article: docs
-				config: config
+		if err
+			renderError res, err
+		else
+			res.render admin + 'editor',
+				layout: admin + 'layout'
+				locals:
+					title: 'Edit'
+					article: docs
+					config: config
 
 app.post '/admin/new', users.check, (req, res) ->
-	docs = 
+	slug = sluggify req.param 'title'
+	posts.save {
+		_id: slug
 		title: req.param 'title'
-		body: ''
-	res.render admin + 'new'
-		layout: admin + 'layout',
-		locals:
-			title: 'New'
-			article: docs
+		markdown: ''
+		user: req.user.name
+		type: 'post'
+		status: 'draft'
+	}, (err, docs) ->
+		if err
+			renderError res, err
+		else
+			res.redirect '/admin'
 
 app.post '/admin/edit', users.check, (req, res) ->
 	if (req.param 'slug')
@@ -140,19 +166,38 @@ app.post '/admin/edit', users.check, (req, res) ->
 	posts.save {
 		_id: slug
 		title: req.param 'title'
-		body: req.param 'body'
+		markdown: req.param 'body'
 		_rev: req.param 'rev'
-		created_at: new Date()
+		user: req.user.name
+		type: 'post'
+		status: req.param 'status'
 	}, (err, docs) ->
 		if (err)
-			res.render admin + 'error'
-				layout: admin + 'layout'
-				locals:
-					title: 'Error'
-					error: JSON.stringify(err)
+			renderError res, err
 		else
 			res.redirect('/')
+
+app.get '/admin/*', users.check, (req, res) ->
+	renderError res, "<b>404:</b> Are you sure that's the right URL?"
+			
+app.get '*', (req, res) ->
+	res.render front + 'view'
+		locals:
+			title: config.site.title + ' / 404'
+			article:
+				title: '404'
+				created_at: ''
+				body: "Woops! Can't find what you're looking for!"
+			config: config
         	
 # Other Functions
 sluggify = (title) ->
 	slug = title.slice(0,30).replace(/\ /ig, '-').toLowerCase()
+	
+renderError = (res, err) ->
+	err = JSON.stringify(err) if typeof err == 'object'	
+	res.render admin + 'error'
+		layout: admin + 'layout'
+		locals:
+			title: 'Error'
+			error: err

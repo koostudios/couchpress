@@ -4,25 +4,56 @@ form#editor(method= 'post', action= '/admin/edit')
 		b= 'Slug: '
 		input(type= 'text', value= article._id, name= 'slug', disabled= 'true')
 		input(type= 'hidden', value= article._rev, name= 'rev')
-	.tray
-		.visual
-			button#bold.edit
-				img(src= '/admin/img/tray/icon-bold.png')
-			button#italic.edit
-				img(src= '/admin/img/tray/icon-italic.png')
-			button#underline.edit
-				img(src= '/admin/img/tray/icon-underline.png')
-		.visual
-			button#InsertUnorderedList.edit
-				img(src= '/admin/img/tray/icon-unordered.png')
-			button#InsertOrderedList.edit
-				img(src= '/admin/img/tray/icon-ordered.png')
-		.toggle-mode
-			button#visual.selected= 'Visual'
-			button#html= 'HTML'
-
-	.editor-visual(contenteditable= 'true', designmode= 'on')!= article.body
-	textarea.editor-html(name= 'body', rows= '20')!= article.body
-	input#submit(type="submit", value="Publish")
+		input(type= 'hidden', value= article.status, name= 'status', value= 'published')
+	#fullscreen-area
+		.tray
+			.visual
+				button#bold.edit(title= 'Bold')
+					img(src= '/admin/img/tray/icon-bold.png')
+				button#italic.edit(title= 'Italic')
+					img(src= '/admin/img/tray/icon-italic.png')
+				
+			.visual
+				button#code.edit(title= 'Code')
+					img(src= '/admin/img/tray/icon-code.png')
+				button#quote.edit(title= 'Blockquote')
+					img(src= '/admin/img/tray/icon-quote.png')
+			
+			.visual
+				button#unordered-list.edit(title= 'Unordered List')
+					img(src= '/admin/img/tray/icon-unordered.png')
+				button#ordered-list.edit(title= 'Ordered List')
+					img(src= '/admin/img/tray/icon-ordered.png')
+					
+			.visual
+				button#link.edit(title= 'Link')
+					img(src= '/admin/img/tray/icon-link.png')
+				button#img.edit(title= 'Image')
+					img(src= '/admin/img/tray/icon-img.png')
+					
+			//
+				.toggle-fullscreen
+					button#fullscreen.other(title= 'Fullscreen')
+						img(src= '/admin/img/tray/icon-fullscreen.png')
+					
+			.toggle-mode
+				button#markdown.selected= 'Markdown'
+				button#preview= 'Preview'
+	
+		textarea.editor-markdown(name= 'body')!= article.markdown
+		.preview!= article.body
+	input#submit(type= "submit", value= "Publish")
+	input#status(type= 'checkbox')
+	span= 'Draft'
+#dialog
+	#dialog-title= 'Information'
+	#dialog-content
+		#dialog-body
+		#dialog-buttons
+			button#dialog-cancel.dialog-button= 'Cancel'
+			button#dialog-ok.dialog-button= 'Ok'
+#overlay
 script(type= 'text/javascript', src= 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+script(type= 'text/javascript', src= '/admin/js/showdown.js')
+script(type= 'text/javascript', src= '/admin/js/cushy.dialog.js')
 script(type= 'text/javascript', src= '/admin/js/editor.js')

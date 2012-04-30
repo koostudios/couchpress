@@ -1,6 +1,8 @@
 !!! 5
 html(lang="en")
 	head
+		meta(charset= 'utf-8')
+		meta(name= 'viewport', content= "width=device-width, initial-scale=1.0, user-scalable=yes")
 		title= 'Couchpress / ' + title
 		link(rel= 'stylesheet', href= '/admin/css/style.css')
 	body
@@ -11,6 +13,8 @@ html(lang="en")
 				ul
 					a(href= '/admin')
 						li= 'Posts'
+					a(href= '/admin/settings')
+						li= 'Settings'
 			nav.right
 				ul
 					a(href= '/logout')
@@ -18,3 +22,9 @@ html(lang="en")
 		section.title= title
 		section.content
 			!= body
+		footer
+			|Proudly powered by 
+			a(href= 'http://couchpress.nodester.com')= 'CouchPress'
+			|.
+			a(href= '/')= 'Visit your site'
+			|.
