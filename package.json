@@ -2,15 +2,15 @@
   "name": "couchpress",
   "description": "A super lightweight and modular CMS built on NodeJS, Express and CouchDB.",
   "tags": ["cms", "content management", "blog", "blogging", "node","couchdb"],
-  "version": "0.1.2",
-  "homepage": "https://github.com/koostudios/Couchpress",
+  "version": "0.1.3",
+  "homepage": "https://github.com/koostudios/couchpress",
   "author": "Alexander Yuen <koo.studios@gmail.com> (http://www.koostudios.com/)",
   "repository": {
     "type": "git",
     "url": "https://github.com/koostudios/couchpress.git"
   },
   "bugs": "https://github.com/koostudios/couchpress/issues",
-  "engines": {"node": ">=0.6.12"},
+  "engines": {"node": ">=0.6.x"},
   "main": "server.js",
   "dependencies": {
     "coffee-script"  : "1.2.x",

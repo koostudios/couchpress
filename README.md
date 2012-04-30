@@ -2,33 +2,30 @@
 
 A super lightweight and modular blogging engine or content management system built on NodeJS, Express and CouchDB. Its main aim is to be the go to CMS for NodeJS users.
 
+**Latest Version:**  0.1.3
+
 ## Features
 
-- Super lightweight (< 150 kb) with optional expansion through plugins
-- Ultra-themeable on the front and back for designers
-- Built with NodeJS and CouchDB
+- Super lightweight with optional expansion through plugins
+- Themeable on the front and back for designers
+- Built with NodeJS, Express and CouchDB
 - Made to be hackable and licensed under the MIT License
 
-## Install 
+## How to Install 
 
-In order to install CouchPress you only need to do:
+In order to install CouchPress, simply use the following commands.
 
     > cd path/to/couchpress;
     > make
     > make install
 
-This command is going to help you to configure your local CouchPress installation trough a few questions, also
-is going to setup the database and the views.
+CouchPress will then ask you a few questions and help you setup your database.
 
-## Changelog
+## Credits
 
-### Version 0.1
+- [Alexander Yuen](https://github.com/koostudios) ([@koostudios](http://www.twitter.com/koostudios))
+- [Alejandro Morales](https://github.com/alejandromg) ([@_alejandromg](https://twitter.com/#!/_alejandromg))
 
- - Human readable creation times using Moment.js
- - Ability to view single posts
- - Rich text support with a custom WYSIWYG editor (a Markdown editor is on its way)
- - Friendly URLs, post IDs and CouchDB document IDs with slugs
- - A primitive admin area for adding and editing posts (go to '/admin' to take a look)
- - New default front-end theme called "Soothe" 
+GentleFace Icons graciously provided by [GentleFace](http://gentleface.com/free_icon_set.html) under [The Creative Commons Attribution-NonCommercial License](http://creativecommons.org/licenses/by-nc/3.0/).
 
 Write Relaxed.
