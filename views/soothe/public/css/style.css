@@ -151,3 +151,56 @@ footer {
 footer .nav {
 	margin-right: 20px;	
 }
+.content pre {
+	color: #555;
+	width: 790px;
+	outline: none;
+	margin-bottom: 10px;
+	line-height: 1.4em;
+}
+
+.content pre p:first-child {
+	margin-top: 0;
+}
+
+.content pre pre {
+	display: block;	
+}
+
+.content pre code {
+	display: inline-block;
+	padding: 10px !important;
+}
+
+.content pre pre, 
+.content pre code,
+.content code {
+	background: #EEE;
+	border: 1px solid #CCC;
+	font-family: 'Courier';
+	padding: 0 3px;
+	font-size: 0.9em;
+	line-height: 1.1em;
+	width: 100%;
+}
+
+.content pre pre > code {
+	background: transparent;
+	border: 0;
+	padding: 5px;
+	font-size: 1em;
+	line-height: 1.4em;
+}
+
+.content pre blockquote {
+	border-left: 5px solid #EEE;
+	padding-left: 10px;	
+}
+
+.content pre img {
+	max-width: 790px;
+}
+.content blockquote {
+	border-left: 5px solid #EEE;
+	padding-left: 10px;
+}
