@@ -122,7 +122,9 @@ app.get '/admin/settings', users.check, (req, res) ->
 			admin: adminConfig
 
 app.post '/admin/settings', users.check, (req, res) ->
-	template = 'exports.config = ' + req.param('data') + '; exports.admin = ' + req.param('admin')
+	Data = JSON.stringify JSON.parse(req.param('data')), null, 2
+	Admin = JSON.stringify JSON.parse(req.param('admin')), null, 2
+	template = 'exports.config = ' +  Data + ';\nexports.admin = ' + Admin
 	fs.writeFile './config.js', template, 'utf8', (err) ->
 		if err
 			res.send '<b>Error:</b>' + err

@@ -116,8 +116,8 @@ function init (cb){
     })
   })
   (function(cb){
-    var template = 'exports.config = '+ JSON.stringify(data) +
-                  ';exports.admin = '+ JSON.stringify(admin);
+    var template = 'exports.config = '+ JSON.stringify(data, null, 2) +
+                  ';\nexports.admin = '+ JSON.stringify(admin, null, 2);
     fs.writeFile('./config.js',template,'utf8', function(err,resp){
       if (err) return cb(err)
       console.log('config.json wrote sucessfully')
