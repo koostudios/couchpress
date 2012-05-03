@@ -10,7 +10,7 @@ form(method= 'post', action= '/admin/new', id= 'newtitle')
 				span.status(class= article.status)= article.status
 			.right
 				a.edit(href= link)= 'Edit'
-				a.delete(href= 'admin/delete/' + article._id)= 'Delete'
+				a.delete(href= 'admin/delete/' + article._id, onClick= 'if (!confirm("Are you sure you want to delete this post?")) return false')= 'Delete'
 			span.created= article.created_at + ' by ' + article.user
 - else
 	.article= "Sorry, no posts found."

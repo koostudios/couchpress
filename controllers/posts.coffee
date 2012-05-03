@@ -38,5 +38,8 @@ class Post
                 callback err
             else
                 callback null, article
+	
+	remove: (id, rev) ->
+    	@db.remove id, rev
  
 exports.posts = new Post()

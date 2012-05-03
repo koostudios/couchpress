@@ -133,6 +133,14 @@ app.post '/admin/settings', users.check, (req, res) ->
 			delete require.cache[require.resolve('./config')]
 			config = require('./config').config
 
+app.get '/admin/delete/:id?', users.check, (req, res) ->
+	posts.findById req.params.id, (err, docs) ->
+		if err
+			renderError res, err
+		else
+			posts.remove docs._id, docs._rev
+		res.redirect '/admin'
+
 app.get '/admin/edit/:id?', users.check, (req, res) ->
 	posts.findById req.params.id, (err, docs) ->
 		if err
