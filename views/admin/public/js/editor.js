@@ -10,7 +10,7 @@ MIT License
 (function() {
 
   $(function() {
-    var Editor, markdown;
+    var Draft, Editor, markdown;
     markdown = {
       'bold': {
         search: /([^\n]+)([\n\s]*)/g,
@@ -56,7 +56,7 @@ MIT License
               type: 'text'
             }
           ],
-          ok: function() {
+          ok: function(e) {
             var text;
             text = '[' + $('#dialog-text').val() + '](' + $('#dialog-url').val() + ')';
             Editor.add(text);
@@ -135,11 +135,56 @@ MIT License
         };
       }
     };
+    Draft = {
+      slug: $('.editor-markdown').attr('id'),
+      load: function() {
+        var md, slug, title;
+        slug = Draft.slug;
+        title = localStorage[slug + '.title'];
+        md = localStorage[slug + '.markdown'];
+        if ((title !== '' && title !== $('#title').val()) || (md !== '' && md !== $('.editor-markdown').val())) {
+          return $.Dialog.init({
+            title: 'Load Draft',
+            body: 'There seems to be a newer, autosaved version of this post last edited at ' + localStorage[slug + '.time'] + '. Would you like to load it?',
+            ok: function() {
+              if (title) $('#title').val(title);
+              if (md) $('.editor-markdown').val(md);
+              if (localStorage[slug + '.slug']) {
+                $('#slug').val(localStorage[slug + '.slug']);
+              }
+              return $.Dialog.hide();
+            }
+          });
+        }
+      },
+      save: function() {
+        var slug;
+        slug = Draft.slug;
+        localStorage[slug + '.title'] = $('#title').val();
+        localStorage[slug + '.slug'] = $('#slug').val();
+        localStorage[slug + '.markdown'] = $('.editor-markdown').val();
+        localStorage[slug + '.time'] = new Date();
+        return console.log('Draft saved at ' + new Date());
+      },
+      clear: function() {
+        var slug;
+        slug = Draft.slug;
+        localStorage[slug + '.title'] = '';
+        localStorage[slug + '.slug'] = '';
+        localStorage[slug + '.markdown'] = '';
+        return localStorage[slug + '.time'] = '';
+      }
+    };
+    Draft.load();
+    setInterval(Draft.save, 30000);
+    $('#dialog-buttons button').on('click', function(e) {
+      return e.preventDefault && e.preventDefault();
+    });
     $('.edit').on('click', function(e) {
       var func, pos, text;
+      e.preventDefault && e.preventDefault();
       pos = Editor.getPosition(Editor.elem);
       text = Editor.elem.val().substring(pos.start, pos.end);
-      e.preventDefault && e.preventDefault();
       if ($(this).attr('id')) {
         func = markdown[$(this).attr('id')];
         if (typeof func.exec === 'object') {
@@ -153,20 +198,16 @@ MIT License
         }
       }
     });
-    /*
-    	Fullscreen not supported yet
-    	$('#fullscreen').on 'click', (e) ->
-    		e.preventDefault && e.preventDefault()
-    		if $(this).hasClass 'selected'
-    			document.webkitCancelFullScreen()
-    			$(this)
-    				.removeClass('selected').children('img').attr('src', '/admin/img/tray/icon-fullscreen.png')	
-    		else
-    			document.getElementById('fullscreen-area').webkitRequestFullScreen Element.ALLOW_KEYBOARD_INPUT
-    			$(this)
-    				.addClass('selected')
-    				.children('img').attr('src', '/admin/img/tray/icon-fullscreen-selected.png')
-    */
+    $('#fullscreen').on('click', function(e) {
+      e.preventDefault && e.preventDefault();
+      if ($(this).hasClass('selected')) {
+        document.webkitCancelFullScreen();
+        return $(this).removeClass('selected').children('img').attr('src', '/admin/img/tray/icon-fullscreen.png');
+      } else {
+        document.getElementById('fullscreen-area').webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        return $(this).addClass('selected').children('img').attr('src', '/admin/img/tray/icon-fullscreen-selected.png');
+      }
+    });
     $('.toggle-mode button').on('click', function(e) {
       var converter;
       e.preventDefault && e.preventDefault();
@@ -192,14 +233,19 @@ MIT License
     $('#overlay').on('click', function() {
       return $.Dialog.hide();
     });
-    return $('#status').on('change', function() {
+    $('#status-check').on('change', function() {
       if ($(this).is(':checked')) {
-        $('#submit').val('Save');
+        $('#go').val('Save');
         return $('input[name=status]').val('draft');
       } else {
-        $('#submit').val('Publish');
+        $('#go').val('Publish');
         return $('input[name=status]').val('published');
       }
+    });
+    return $('#go').on('click', function(e) {
+      e.preventDefault && e.preventDefault();
+      Draft.clear();
+      return $('#editor').submit();
     });
   });
 

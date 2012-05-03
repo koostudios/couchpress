@@ -13,14 +13,17 @@ MIT License
     var Dialog;
     Dialog = {
       attachEvents: function(ok) {
-        $('#dialog-ok').on('click', ok);
-        $('#dialog-cancel').on('click', Dialog.hide);
-        return $('#dialog-body input').keydown(function(e) {
+        $('#dialog-ok').on('click', function(e) {
+          e.preventDefault && e.preventDefault();
+          return ok();
+        });
+        $('#dialog-body input').keydown(function(e) {
           if (e.keyCode === 13) {
             e.preventDefault && e.preventDefault();
             return ok();
           }
         });
+        return $('#dialog-cancel').on('click', Dialog.hide);
       },
       createFields: function(obj) {
         var field, html, _i, _len;

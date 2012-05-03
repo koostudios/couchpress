@@ -2,9 +2,9 @@ form#editor(method= 'post', action= '/admin/edit')
 	input#title(type= 'text', name= 'title', placeholder='Title', value= article.title)
 	.slugger
 		b= 'Slug: '
-		input(type= 'text', value= article._id, name= 'slug', disabled= 'true')
-		input(type= 'hidden', value= article._rev, name= 'rev')
-		input(type= 'hidden', value= article.status, name= 'status', value= 'published')
+		input#slug(type= 'text', value= article._id, name= 'slug', disabled= 'true')
+		input#rev(type= 'hidden', value= article._rev, name= 'rev')
+		input#status(type= 'hidden', value= article.status, name= 'status', value= 'published')
 	#fullscreen-area
 		.tray
 			.visual
@@ -31,28 +31,28 @@ form#editor(method= 'post', action= '/admin/edit')
 				button#img.edit(title= 'Image')
 					img(src= '/admin/img/tray/icon-img.png')
 					
-			//
-				.toggle-fullscreen
-					button#fullscreen.other(title= 'Fullscreen')
-						img(src= '/admin/img/tray/icon-fullscreen.png')
+			.toggle-fullscreen
+				button#fullscreen.other(title= 'Fullscreen')
+					img(src= '/admin/img/tray/icon-fullscreen.png')
 					
 			.toggle-mode
 				button#markdown.selected= 'Markdown'
 				button#preview= 'Preview'
 	
-		textarea.editor-markdown(name= 'body')!= article.markdown
+		textarea.editor-markdown(name= 'body', id= article._id)!= article.markdown
 		.preview!= article.body
-	input#submit(type= "submit", value= "Publish")
-	input#status(type= 'checkbox')
+		#dialog
+			#dialog-title= 'Information'
+			#dialog-content
+				#dialog-body
+				#dialog-buttons
+					button#dialog-cancel.dialog-button= 'Cancel'
+					button#dialog-ok.dialog-button= 'Ok'
+		#overlay
+	input#go(type= 'submit', value= 'Publish')
+	input#status-check(type= 'checkbox')
 	span= 'Draft'
-#dialog
-	#dialog-title= 'Information'
-	#dialog-content
-		#dialog-body
-		#dialog-buttons
-			button#dialog-cancel.dialog-button= 'Cancel'
-			button#dialog-ok.dialog-button= 'Ok'
-#overlay
+
 script(type= 'text/javascript', src= 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
 script(type= 'text/javascript', src= '/admin/js/showdown.js')
 script(type= 'text/javascript', src= '/admin/js/cushy.dialog.js')

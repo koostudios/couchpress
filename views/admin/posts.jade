@@ -1,7 +1,6 @@
+form(method= 'post', action= '/admin/new', id= 'newtitle')
+	input(type= 'text', placeholder= 'A new idea here...', name= 'title')
 - if(typeof(articles) != 'undefined')
-	form(method= 'post', action= '/admin/new', id= 'newtitle')
-		input(type= 'text', placeholder= 'A new idea here...', name= 'title')
-		
 	- each article in articles
 		.article
 			- var link = 'admin/edit/' + article._id
