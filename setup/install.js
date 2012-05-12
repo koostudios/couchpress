@@ -199,7 +199,10 @@ function installViews(data,cb){
     db.save('_design/couchpress', {
       views: {
         all: {
-          map: 'function(doc) {\n  emit(doc.created_at, doc);\n}\n'
+          map: 'function(doc) {\n  if (doc.type !== \'upload\')\n    emit(doc.created_at, doc);\n}\n'
+        },
+        uploads_all: {
+          map: 'function(doc) {\n  if (doc.type === \'upload\')\n    emit(doc.created_at, doc);\n}'
         }
       }
     }, function(error,res){
