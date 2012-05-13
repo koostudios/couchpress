@@ -103,6 +103,22 @@ nav.right {
 		font-size: 0.9em;
 		color: #AAA;	
 	}
+
+	.article h2 {
+		margin:0;
+		font-size: 1.2em;
+	}
+
+	.article span.slug {
+		color: #777;
+	}
+
+	.article span.type {
+		float:right;
+		font-family:serif;
+		font-style:oblique;
+		color:#888;
+	}
 	
 	
 	.article .right {
@@ -433,6 +449,36 @@ form input {
 		
 		form#editor span {
 			font-size: 14px;
+		}
+
+
+		form#uploader {
+
+		}
+		form#uploader input[type='file'] {
+			padding:5px 20px;
+			background-color:#eee;
+		}
+		form#uploader #go {
+			/*float: right;*/
+			display: inline;
+			padding: 10px 15px;
+			width: 100px;
+			font-size: 0.8em;
+			background: #DDD;
+			border: 1px solid #AAA;
+			cursor: pointer;
+			box-shadow: inset 0 1px 1px #FFF;
+		}
+		
+		form#uploader #go:hover {
+			background: #EEE;
+		}
+		
+		form#uploader #go:active {
+			background: #555;
+			color: #FFF;
+			box-shadow: inset 0 1px 1px #222;
 		}
 
 #dialog {

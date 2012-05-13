@@ -9,6 +9,7 @@ config = require('./config').config
 # Controllers
 posts = require('./controllers/posts').posts
 users = require('./controllers/users').users
+uploads = require('./controllers/uploads').uploads
 
 pass.serializeUser (user, done) ->
   done null, user._id
@@ -112,6 +113,43 @@ app.get '/admin', users.check, (req, res) ->
       locals:
         title: 'Posts'
         articles: docs
+
+app.get '/upload/:slug/:filename', (req, res, next) ->
+	uploads.findById req.params.slug, req.params.filename, (err, file) ->
+		if err
+			next()
+		else
+			res.header "Content-type", file._attachments[file.filename].content_type
+			res.header "Content-Encoding", "identity"
+			res.header "Content-length", file.size
+			res.end file.data
+
+app.get '/admin/uploads', users.check, (req, res) ->
+	uploads.findAll (err, files) ->
+		res.render admin + 'uploads',
+			layout: admin + 'layout',
+			locals:
+					title: 'Uploads',
+					articles: files
+
+app.post '/admin/uploads', users.check, (req, res) ->
+	console.log(req.body)
+	console.log(req.files)
+
+	slug = sluggify req.param 'title'
+	filename = sluggify req.files.upload.name
+	uploads.save {
+		_id: slug
+		title: req.param 'title'
+		filename: filename
+		type: 'upload'
+		user: req.user.name
+
+	}, req.files.upload, (err, docs) ->
+		if (err)
+			console.warn("ERROR UPLOADING: ", err)
+		else
+			res.redirect('/admin/uploads')
 
 app.get '/admin/settings', users.check, (req, res) ->
   adminConfig = require('./config').admin

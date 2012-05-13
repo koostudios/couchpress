@@ -1,0 +1,18 @@
+h2 New File
+form(method='post', action='/admin/uploads', id='uploader', enctype='multipart/form-data')
+	input(type='text', placeholder='File Title', name='title')
+	input(type='file', placeholder='Upload a file', name='upload')
+	input(type='submit', value='Upload', id='go')
+h2 Existing Files
+- if(typeof(articles) != 'undefined')
+	- each article in articles
+		- var slug = '/upload/' + article._id + '/' + article.filename
+		.article
+			h1= article.filename
+			h2= article.title
+			span.type= article._attachments[article.filename].content_type
+			span.slug
+				a(href= slug, target='_blank')= slug
+			span.created= article.created_at + ' by ' + article.user
+- else
+	.article='No uploads'
