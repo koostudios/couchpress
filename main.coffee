@@ -1,10 +1,10 @@
 # Requires and Variables
-exp = require 'express'
-app = exp.createServer()
-pass = require 'passport'
-Local = require('passport-local').Strategy
 fs = require 'fs'
+exp = require 'express'
+pass = require 'passport'
+app = exp.createServer()
 config = require('./config').config
+Local = require('passport-local').Strategy
 
 # Controllers
 posts = require('./controllers/posts').posts
@@ -26,6 +26,11 @@ pass.use 'local', new Local (username, password, done) ->
 admin = __dirname + '/views/' + config.theme.admin + '/'
 front = __dirname + '/views/' + config.theme.front + '/'
 
+# To reload assets
+load = ->
+  admin = __dirname + '/views/' + config.theme.admin + '/'
+  front = __dirname + '/views/' + config.theme.front + '/'
+
 # App Configuration
 app.configure () ->
   app.set 'view engine', 'jade'
@@ -40,10 +45,14 @@ app.configure () ->
   app.use pass.initialize()
   app.use pass.session()
   app.use app.router
- 
+
+# Exposing config in requests
+app.dynamicHelpers
+  config : -> config
+
 # Run App
 app.listen config.site.port, () ->
-  console.log 'Server running at port ' + app.address().port
+  console.log ':: CouchPress running at port ' + app.address().port + ' ::'
 
 # Routing
 app.get '/', (req, res) ->
@@ -52,7 +61,6 @@ app.get '/', (req, res) ->
             locals:
               title: config.site.title + ' / Home'
               articles: docs
-              config: config
 
 app.get '/:id?', (req, res, next) ->
   posts.findById req.params.id, (err, docs) ->
@@ -63,7 +71,6 @@ app.get '/:id?', (req, res, next) ->
         locals:
           title: config.site.title + ' / ' + docs.title
           article: docs
-          config: config
     else
       next()
 
@@ -72,7 +79,6 @@ app.get '/login', (req, res) ->
     locals:
       title: config.site.title + ' / Login'
       message: req.flash('error')
-      config: config
         
 app.post '/login', pass.authenticate 'local',
   successRedirect: '/admin'
@@ -82,7 +88,6 @@ app.post '/login', pass.authenticate 'local',
 app.get '/register', (req, res) ->
   res.render front + 'register',
     title: config.site.title + ' / Register'
-    config: config
       
 app.post '/register', (req, res) ->
   data =
@@ -98,7 +103,6 @@ app.post '/register', (req, res) ->
         locals:
           title: config.site.title
           message: JSON.stringify err
-          config: config
     else
       res.redirect '/admin'
 
@@ -155,7 +159,6 @@ app.get '/admin/settings', users.check, (req, res) ->
     layout: admin + 'layout'
     locals:
       title: 'Settings'
-      config: config
       admin: adminConfig
 
 app.post '/admin/settings', users.check, (req, res) ->
@@ -166,9 +169,10 @@ app.post '/admin/settings', users.check, (req, res) ->
     if err
       res.send '<b>Error:</b>' + err
     else
-      res.send '<b>Success!</b> Settings Saved.'
-      delete require.cache[require.resolve('./config')]
+      delete require.cache[require.resolve('./config.js')]
       config = require('./config').config
+      load()
+      res.send '<b>Success!</b> Settings Saved.'
 
 app.get '/admin/delete/:id?', users.check, (req, res) ->
   posts.findById req.params.id, (err, docs) ->
@@ -188,7 +192,6 @@ app.get '/admin/edit/:id?', users.check, (req, res) ->
         locals:
           title: 'Edit'
           article: docs
-          config: config
 
 app.post '/admin/new', users.check, (req, res) ->
   slug = sluggify req.param 'title'
@@ -235,7 +238,6 @@ app.get '/500', (req, res) ->
         title: '500'
         created_at: ''
         body: "Internal Server Error"
-      config: config
 
 app.get '*', (req, res) ->
   res.render front + 'view'
@@ -245,7 +247,6 @@ app.get '*', (req, res) ->
         title: '404'
         created_at: ''
         body: "Woops! Can't find what you're looking for!"
-      config: config
           
 # Other Functions
 sluggify = (title) ->
