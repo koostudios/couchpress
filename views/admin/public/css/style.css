@@ -275,6 +275,16 @@ form input {
 		font-weight: normal;
 		cursor: pointer;
 	}
+
+	.tags {
+		margin:10px 0;
+		width: 790px;
+	}
+
+	.tags input[type='text'] {
+		padding:5px 20px;
+		font-weight: normal;
+	}
 	
 	#fullscreen-area:-webkit-full-screen  {
 		width: 100% !important;

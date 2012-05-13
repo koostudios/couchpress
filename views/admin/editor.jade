@@ -5,6 +5,8 @@ form#editor(method= 'post', action= '/admin/edit')
 		input#slug(type= 'text', value= article._id, name= 'slug', disabled= 'true')
 		input#rev(type= 'hidden', value= article._rev, name= 'rev')
 		input#status(type= 'hidden', value= article.status, name= 'status', value= 'published')
+	.tags
+		input#tags(type='text', name='tags', class='tagInput', placeholder='Comma-separated list of tags')
 	#fullscreen-area
 		.tray
 			.visual
