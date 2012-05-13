@@ -133,9 +133,6 @@ app.get '/admin/uploads', users.check, (req, res) ->
 					articles: files
 
 app.post '/admin/uploads', users.check, (req, res) ->
-	console.log(req.body)
-	console.log(req.files)
-
 	slug = sluggify req.param 'title'
 	filename = sluggify req.files.upload.name
 	uploads.save {
@@ -147,9 +144,10 @@ app.post '/admin/uploads', users.check, (req, res) ->
 
 	}, req.files.upload, (err, docs) ->
 		if (err)
-			console.warn("ERROR UPLOADING: ", err)
+      console.log(':: CouchPress :: ERROR -> \n' + err)
+      res.redirect '/500'
 		else
-			res.redirect('/admin/uploads')
+			res.redirect '/admin/uploads'
 
 app.get '/admin/settings', users.check, (req, res) ->
   adminConfig = require('./config').admin
@@ -229,6 +227,16 @@ app.post '/admin/edit', users.check, (req, res) ->
 app.get '/admin/*', users.check, (req, res) ->
   renderError res, "<b>404:</b> Are you sure that's the right URL?"
       
+app.get '/500', (req, res) ->
+  res.render front + 'view'
+    locals:
+      title: config.site.title + ' / 500'
+      article:
+        title: '500'
+        created_at: ''
+        body: "Internal Server Error"
+      config: config
+
 app.get '*', (req, res) ->
   res.render front + 'view'
     locals:
