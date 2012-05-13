@@ -10,30 +10,38 @@ var read   = require('read')
   , path   = require('path')
   , crypto = require('crypto')
   , packageJSON = require('../package.json')
+  , data = {}
+  , admin = {}
   ;
 
-var data = {
-  site : {
-    title       :"CouchPress Site",
-    description :"Just another CouchPress Site",
-    copyright   :"Joe Bloggs",
-    twitter     :"joebloggs",
-    port        :"3000",
-    secret      :"somethingsecret",
-    version     : packageJSON.version
-  },
-  theme: {
-    admin: "admin",
-    front:"soothe"
-  },
-  db:{
-    host:"http://localhost",
-    port:"5984"
+try {
+  var old = require('../config.js')
+  data = old.config;
+  admin = old.admin;
+} catch (excp) {
+  data = {
+    site : {
+      title       :"CouchPress Site",
+      description :"Just another CouchPress Site",
+      copyright   :"Joe Bloggs",
+      twitter     :"joebloggs",
+      port        :"3000",
+      secret      :"somethingsecret",
+      version     : packageJSON.version
+    },
+    theme: {
+      admin: "admin",
+      front:"soothe"
+    },
+    db:{
+      host:"http://localhost",
+      port:"5984"
+    }
   }
-}
-var admin = {
-  user :"admin",
-  pass :"admin"
+  admin = {
+    user :"admin",
+    pass :"admin"
+  }
 }
 var site = data.site
   , theme = data.theme
