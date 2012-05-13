@@ -1,10 +1,16 @@
+/*
+          CouchPress Installer Script 
+  Please do not modify anything below this line 
+ -----------------------------------------------
+*/
+
 var read   = require('read')
   , fs     = require('fs')
   , cradle = require('cradle')
   , path   = require('path')
   , crypto = require('crypto')
+  , packageJSON = require('../package.json')
   ;
-/* */
 
 var data = {
   site : {
@@ -13,7 +19,8 @@ var data = {
     copyright   :"Joe Bloggs",
     twitter     :"joebloggs",
     port        :"3000",
-    secret      :"somethingsecret"
+    secret      :"somethingsecret",
+    version     : packageJSON.version
   },
   theme: {
     admin: "admin",
@@ -37,7 +44,6 @@ function init (cb){
   console.log('I\'m going to ask you some question, respond only the true ;)\n')
   promiseChain(cb)
   (function(cb){
-    var packageJSON = require('../package.json');
     var mo = Object.keys(packageJSON.dependencies);
     if (path.existsSync(__dirname + '/../node_modules')){
       var modules = fs.readdirSync(__dirname +'/../node_modules')
@@ -120,7 +126,7 @@ function init (cb){
                   ';\nexports.admin = '+ JSON.stringify(admin, null, 2);
     fs.writeFile('./config.js',template,'utf8', function(err,resp){
       if (err) return cb(err)
-      console.log('config.json wrote sucessfully')
+      console.log('config.js wrote sucessfully')
       return cb();
     });
   })
@@ -155,7 +161,7 @@ function init (cb){
         )(function(cb){
            var url =  data.db.host;
           if (!~url.indexOf('://')) url = 'http://' + url;
-          var c = new(cradle.Connection)(url,data.db.host,{
+          var c = new(cradle.Connection)(url,data.db.port,{
              auth: { username: admin.user, password: admin.pass }
           });
           var salt = crypto.createHash('md5').update(new Date().toString()).update(Math.random().toString()).digest('hex');
