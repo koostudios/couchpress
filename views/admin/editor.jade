@@ -6,7 +6,7 @@ form#editor(method= 'post', action= '/admin/edit')
 		input#rev(type= 'hidden', value= article._rev, name= 'rev')
 		input#status(type= 'hidden', value= article.status, name= 'status', value= 'published')
 	.tags
-		input#tags(type='text', name='tags', class='tagInput', placeholder='Comma-separated list of tags')
+		input#tags(type='text', name='tags', class='tagInput', placeholder='Comma-separated list of tags', value= (article.tags ? article.tags.join(', ') : ''))
 	#fullscreen-area
 		.tray
 			.visual

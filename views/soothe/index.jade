@@ -5,6 +5,10 @@
 				- var link = '/' + article._id
 				a(href= link, class= 'title')
 					h1= article.title
+				- if (article.tags)
+					.tags= 'Tags: '
+						- each tag in article.tags
+							a.tag(href='/tag/'+encodeURIComponent(tag))= tag
 				span.created= article.created_at + ' by ' + article.user
 				span.body!= article.body
 - else

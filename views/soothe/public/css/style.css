@@ -88,6 +88,32 @@ div.article, form#new {
 		font-size: 0.9em;
 		color: #999;
 	}
+
+	.article .tags {
+		margin-top:-25px;
+		text-align:right;
+		float:right;
+		padding-left:25px;
+		font-weight:bold;
+		font-family:serif;
+		font-style:oblique;
+	}
+
+	.article .tags .tag{
+		color: #444;
+		margin-left: 5px;
+		text-decoration:none;
+	}
+
+	.article .tags .tag:hover {
+		color: #22c;
+	}
+
+	.article .tags .tag:after {
+		font-weight:normal;
+		color: #999;
+		content: ',';
+	}
 	
 	div.article span.body a {text-deocration: underline;}
 	

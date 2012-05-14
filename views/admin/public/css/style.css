@@ -104,6 +104,25 @@ nav.right {
 		color: #AAA;	
 	}
 
+	.article .tags {
+		font-weight:bold;
+	}
+
+	.article .tags .tag {
+		color: #777;
+		margin-left: 5px;
+	}
+
+	.article .tags .tag:hover {
+		color: #55c;
+	}
+
+	.article .tags .tag:after {
+		font-weight:normal;
+		color: #ccc;
+		content: ',';
+	}
+
 	.article h2 {
 		margin:0;
 		font-size: 1.2em;

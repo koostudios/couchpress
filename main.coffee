@@ -74,6 +74,14 @@ app.get '/:id?', (req, res, next) ->
     else
       next()
 
+app.get '/tag/:tag', (req, res) ->
+	posts.findByTag req.params.tag, (err, docs) ->
+		res.render front + 'index',
+			locals:
+				title: config.site.title + ' / Tag / ' + req.params.tag
+				articles: docs
+				config: config
+
 app.get '/login', (req, res) ->
   res.render front + 'login',
     locals:
@@ -209,23 +217,38 @@ app.post '/admin/new', users.check, (req, res) ->
       res.redirect '/admin'
 
 app.post '/admin/edit', users.check, (req, res) ->
-  if (req.param 'slug')
-    slug = req.param 'slug'
-  else
-    slug = sluggify req.param 'title'
-  posts.save {
-    _id: slug
-    title: req.param 'title'
-    markdown: req.param 'body'
-    _rev: req.param 'rev'
-    user: req.user.name
-    type: 'post'
-    status: req.param 'status'
-  }, (err, docs) ->
-    if (err)
-      renderError res, err
-    else
-      res.redirect('/')
+	if (req.param 'slug')
+		slug = req.param 'slug'
+	else
+		slug = sluggify req.param 'title'
+	#Tag parsing:
+	# Replaces spaces and some special characters with hyphens, so its still a human-
+	# readable format that's also url-friendly
+	# *note* This is used on the client-side as well, so changes made here must also
+	# be made on the client for compatibility.
+	# See: editor.js, in the `save` method, check for `//Tag Parsing`
+	tags = []
+	if (req.param 'tags')
+		potentialTag = ''
+		tagstr = req.param('tags').split(',')
+		for t in tagstr
+			potentialTag = t.trim().replace(/[^a-z0-9]+/gi, '-').replace(/^-*|-*$/g, '')
+			if (potentialTag != '')
+				tags.push potentialTag
+	posts.save {
+		_id: slug
+		title: req.param 'title'
+		tags: tags
+		markdown: req.param 'body'
+		_rev: req.param 'rev'
+		user: req.user.name
+		type: 'post'
+		status: req.param 'status'
+	}, (err, docs) ->
+		if (err)
+			renderError res, err
+		else
+			res.redirect('/')
 
 app.get '/admin/*', users.check, (req, res) ->
   renderError res, "<b>404:</b> Are you sure that's the right URL?"
