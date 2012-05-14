@@ -31,16 +31,14 @@ class Post
                 callback null, res
 
     findByTag: (tag, callback) ->
-        @db.view 'couchpress/all', {descending: true}, (err, res) ->
+        @db.view 'couchpress/tag', {key: tag, descending: true}, (err, res) ->
             if (err)
                 callback(err)
             else
                 docs = []
-                # find posts with a certain tag
                 res.forEach (row) ->
-                    if (row.tags && row.tags.indexOf(tag) != -1)
-                        row.created_at = moment(row.created_at).fromNow()
-                        docs.push row
+                    row.created_at = moment(row.created_at).fromNow()
+                    docs.push row
                 callback(null, docs)
  	
  	save: (article, callback) ->

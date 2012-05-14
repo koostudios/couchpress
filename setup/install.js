@@ -215,8 +215,19 @@ function installViews(data,cb){
         all: {
           map: 'function(doc) {\n  if (doc.type !== \'upload\')\n    emit(doc.created_at, doc);\n}\n'
         },
+        tag: {
+          map: function(doc) {
+            for (tag in doc.tags) {
+              emit(doc.tags[tag], doc)
+            }
+          }
+        },
         uploads_all: {
-          map: 'function(doc) {\n  if (doc.type === \'upload\')\n    emit(doc.created_at, doc);\n}'
+          map: function(doc) {
+            if (doc.type === 'upload') {
+              emit(doc.created_at, doc);
+            }
+          }
         }
       }
     }, function(error,res){
