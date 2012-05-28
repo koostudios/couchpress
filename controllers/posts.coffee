@@ -18,15 +18,17 @@ class Post
             else
                 docs = []
                 res.forEach (row) ->
-                	row.created_at = moment(row.created_at).fromNow()
-                	docs.push row
+                    row.rawDate = row.created_at
+                    row.created_at = moment(row.created_at).fromNow()
+                    docs.push row
                 callback null, docs
 	
 	findById: (id, callback) ->
         @db.get id, (err,res) ->
             if (err)
                 callback err
-            else 
+            else
+                res.rawDate = res.created_at
                 res.created_at = moment(res.created_at).fromNow()
                 callback null, res
 
@@ -37,6 +39,7 @@ class Post
             else
                 docs = []
                 res.forEach (row) ->
+                    row.rawDate = row.created_at
                     row.created_at = moment(row.created_at).fromNow()
                     docs.push row
                 callback(null, docs)
